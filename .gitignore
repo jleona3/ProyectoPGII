@@ -1,0 +1,6 @@
+# Ignorar todo por defecto
+*
+
+# Exceptuar archivos .gitignore y .sql
+!.gitignore
+!*.sql
