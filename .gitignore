@@ -1,9 +1,0 @@
-# Ignorar todo por defecto
-*
-
-# Exceptuar carpeta docs
-!docs/
-
-# Exceptuar archivos .gitignore y .sql
-!.gitignore
-!*.sql

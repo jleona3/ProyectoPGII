@@ -1,0 +1,15 @@
+Conection URL
+postgresql://postgres:MINedquSGlLCPrqTevbKrNmmRTBPNqZO@maglev.proxy.rlwy.net:36247/railway
+
+Raw 'psql' command
+PGPASSWORD=MINedquSGlLCPrqTevbKrNmmRTBPNqZO psql -h maglev.proxy.rlwy.net -U postgres -p 36247 -d railway
+
+Railway CLI connect command
+railway connect Postgres
+
+https://supabase.com/dashboard/new/oyhvnxoqlysvxwrweaip?projectName=jleona3%27s%20Project
+Nombre del Proyecto:
+jleona3 PGII
+
+Contraseña:
+miumgPGII*2025

@@ -512,6 +512,16 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE SP_ESTADO
+@ID_ESTADO INT
+AS
+BEGIN
+    SELECT * FROM dbo.TRZ6_CAT_ESTADO
+    WHERE
+    ID_ESTADO = @ID_ESTADO
+    AND CODIGO = 1
+END
+
 -- =========================================================
 --  FIN DEL ESQUEMA + SPs
 -- =========================================================
