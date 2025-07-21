@@ -1,0 +1,35 @@
+-- ✅ Versión final con estado fijo en 1
+CREATE PROCEDURE SP_L_USUARIO_03
+    @EMAIL VARCHAR(150),
+    @PASSWORD VARBINARY(150)
+AS
+BEGIN
+    SELECT
+        U.ID_USER,
+        U.ID_APTO,
+        U.EMAIL,
+        U.NOMBRES,
+        U.APELLIDOS,
+        U.DPI,
+        U.TELEFONO,
+        U.PASSWORD,
+        U.FOTO_PERFIL,
+        U.ID_ESTADO,
+        U.ROL_ID,
+        C.NUM_TORRE,
+        C.NIVEL, 
+        E.CODIGO,
+        E.DESCRIPCION,
+        R.ROL_NOM,
+        R.ESTADO
+    FROM 
+        TRZ6_USUARIO U
+        INNER JOIN TRZ6_CONDOMINIO C ON U.ID_APTO = C.ID_APTO
+        INNER JOIN TRZ6_CAT_ESTADO E ON U.ID_ESTADO = E.ID_ESTADO AND C.ID_ESTADO = E.ID_ESTADO
+        INNER JOIN TRZ6_ROL R ON U.ROL_ID = R.ROL_ID
+    WHERE
+        U.ID_ESTADO = 1
+        AND U.EMAIL = @EMAIL
+        AND U.PASSWORD = @PASSWORD
+END
+GO

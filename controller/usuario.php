@@ -13,15 +13,15 @@
                 if (empty($_POST["id_user"])) {
                     // Guardar
                     $usuario->insertUsuario(
-                        $_POST["id_apto"], $_POST["email"], $_POST["nombres"], $_POST["apellidos"], $_POST["dpi"], 
-                        $_POST["telefono"], $_POST["password_hash"], $_POST["password_salt"], $_POST["foto_perfil"], 
+                        $_POST["id_apto"], $_POST["email"], $_POST["nombres"], $_POST["apellidos"],
+                        $_POST["dpi"], $_POST["telefono"], $_POST["password"], $_POST["foto_perfil"], 
                         $_POST["id_estado"], $_POST["rol_id"]
                     );
                 } else {
                     // Editar
                     $usuario->updateUsuario(
-                        $_POST["id_user"], $_POST["id_apto"], $_POST["email"], $_POST["nombres"], $_POST["apellidos"], 
-                        $_POST["dpi"], $_POST["telefono"], $_POST["password_hash"], $_POST["password_salt"], 
+                        $_POST["id_user"], $_POST["id_apto"], $_POST["email"], $_POST["nombres"],
+                        $_POST["apellidos"], $_POST["dpi"], $_POST["telefono"], $_POST["password"], 
                         $_POST["foto_perfil"], $_POST["id_estado"], $_POST["rol_id"]
                     );
                 }
@@ -78,8 +78,7 @@
                             "apellidos" => $row["apellidos"],
                             "dpi" => $row["dpi"],
                             "telefono" => $row["telefono"],
-                            "password_hash" => $row["password_hash"],
-                            "password_salt" => $row["password_salt"],
+                            "password" => $row["password"],
                             "foto_perfil" => $row["foto_perfil"],
                             "id_estado" => $row["id_estado"],
                             "rol_id" => $row["rol_id"]

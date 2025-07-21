@@ -38,8 +38,7 @@ class Usuario extends Conectar {
         $apellidos,
         $dpi,
         $telefono,
-        $password_hash,
-        $password_salt,
+        $password,
         $foto_perfil,
         $id_estado,
         $rol_id
@@ -53,8 +52,7 @@ class Usuario extends Conectar {
         $query->bindValue(4,  $apellidos);
         $query->bindValue(5,  $dpi);
         $query->bindValue(6,  $telefono);
-        $query->bindValue(7,  $password_hash, PDO::PARAM_LOB);
-        $query->bindValue(8,  $password_salt, PDO::PARAM_LOB);
+        $query->bindValue(7,  $password);
         $query->bindValue(9,  $foto_perfil,   PDO::PARAM_LOB);
         $query->bindValue(10, $id_estado);
         $query->bindValue(11, $rol_id);
@@ -70,8 +68,7 @@ class Usuario extends Conectar {
         $apellidos,
         $dpi,
         $telefono,
-        $password_hash,
-        $password_salt,
+        $password,
         $foto_perfil,
         $id_estado,
         $rol_id
@@ -86,12 +83,47 @@ class Usuario extends Conectar {
         $query->bindValue(5,  $apellidos);
         $query->bindValue(6,  $dpi);
         $query->bindValue(7,  $telefono);
-        $query->bindValue(8,  $password_hash, PDO::PARAM_LOB);
-        $query->bindValue(9,  $password_salt, PDO::PARAM_LOB);
+        $query->bindValue(8,  $password);
         $query->bindValue(10, $foto_perfil,   PDO::PARAM_LOB);
         $query->bindValue(11, $id_estado);
         $query->bindValue(12, $rol_id);
         $query->execute();
+    }
+
+    /* TODO: 6. Acceso al Sistema */
+    public function login(){
+        $conectar = parent::Conexion();
+
+        if(isset($_POST["enviar"])){
+            $correo = $_POST["email"];
+            $password = $_POST["password"];
+
+            if(empty($correo) || empty($password)){
+                exit();
+            } else {
+                $sql = "EXEC SP_L_USUARIO_03 ?, ?";
+                $query = $conectar->prepare($sql);
+                $query->bindValue(1, $correo);
+                $query->bindValue(2, $password);
+                $query->execute();
+
+                $resultado = $query->fetch();
+                if(is_array($resultado) && count($resultado) > 0){
+                    $_SESSION["ID_USER"] = $resultado["ID_USER"];
+                    $_SESSION["EMAIL"] = $resultado["EMAIL"];
+                    header("Location:" . Conectar::ruta() . "view/home");
+                } else {
+                    echo "<script>
+                        alert('Correo o contraseña incorrectos');
+                        document.addEventListener('DOMContentLoaded', function () {
+                            document.getElementById('login_form').reset();
+                        });
+                    </script>";
+                }
+            }
+        } else {
+            exit();
+        }
     }
 }
 ?>
