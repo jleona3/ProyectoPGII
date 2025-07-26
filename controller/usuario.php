@@ -13,15 +13,15 @@
                 if (empty($_POST["id_user"])) {
                     // Guardar
                     $usuario->insertUsuario(
-                        $_POST["id_apto"], $_POST["email"], $_POST["nombres"], $_POST["apellidos"],
-                        $_POST["dpi"], $_POST["telefono"], $_POST["password"], $_POST["foto_perfil"], 
+                        $_POST["id_apto"], $_POST["email"], $_POST["pass"], $_POST["nombres"], $_POST["apellidos"],
+                        $_POST["dpi"], $_POST["telefono"], $_POST["foto_perfil"], 
                         $_POST["id_estado"], $_POST["rol_id"]
                     );
                 } else {
                     // Editar
                     $usuario->updateUsuario(
-                        $_POST["id_user"], $_POST["id_apto"], $_POST["email"], $_POST["nombres"],
-                        $_POST["apellidos"], $_POST["dpi"], $_POST["telefono"], $_POST["password"], 
+                        $_POST["id_user"], $_POST["id_apto"], $_POST["email"], $_POST["pass"], $_POST["nombres"],
+                        $_POST["apellidos"], $_POST["dpi"], $_POST["telefono"], 
                         $_POST["foto_perfil"], $_POST["id_estado"], $_POST["rol_id"]
                     );
                 }
@@ -74,11 +74,11 @@
                             "id_user" => $row["id_user"],
                             "id_apto" => $row["id_apto"],
                             "email" => $row["email"],
+                            "pass" => $row["pass"],
                             "nombres" => $row["nombres"],
                             "apellidos" => $row["apellidos"],
                             "dpi" => $row["dpi"],
-                            "telefono" => $row["telefono"],
-                            "password" => $row["password"],
+                            "telefono" => $row["telefono"],                            
                             "foto_perfil" => $row["foto_perfil"],
                             "id_estado" => $row["id_estado"],
                             "rol_id" => $row["rol_id"]

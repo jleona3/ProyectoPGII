@@ -37,11 +37,11 @@ BEGIN
         ID_USER,
         ID_APTO,
         EMAIL,
+        PASS,
         NOMBRES,
         APELLIDOS,
         DPI,
-        TELEFONO,
-        PASSWORD,
+        TELEFONO,        
         FOTO_PERFIL,
         ID_ESTADO,
         FE_CREACION,
@@ -65,11 +65,11 @@ GO
 CREATE PROCEDURE SP_I_USUARIO_01
     @ID_APTO INT,
     @EMAIL VARCHAR(150),
+    @PASS VARCHAR(150),
     @NOMBRES VARCHAR(150),
     @APELLIDOS VARCHAR(150),
     @DPI VARCHAR(50),
-    @TELEFONO VARCHAR(50),
-    @PASSWORD VARCHAR(150),
+    @TELEFONO VARCHAR(50),    
     @FOTO_PERFIL VARBINARY(MAX),
     @ID_ESTADO INT,
     @ROL_ID INT
@@ -78,11 +78,11 @@ BEGIN
     INSERT INTO TRZ6_USUARIO (
         ID_APTO,
         EMAIL,
+        PASS,
         NOMBRES,
         APELLIDOS,
         DPI,
-        TELEFONO,
-        PASSWORD,
+        TELEFONO,        
         FOTO_PERFIL,
         ID_ESTADO,
         FE_CREACION,
@@ -91,11 +91,11 @@ BEGIN
     VALUES (
         @ID_APTO,
         @EMAIL,
+        @PASS,
         @NOMBRES,
         @APELLIDOS,
         @DPI,
-        @TELEFONO,
-        @PASSWORD,
+        @TELEFONO,        
         @FOTO_PERFIL,
         @ID_ESTADO,
         SYSUTCDATETIME(),
@@ -109,11 +109,11 @@ CREATE PROCEDURE SP_U_USUARIO_01
     @ID_USER INT,
     @ID_APTO INT,
     @EMAIL VARCHAR(150),
+    @PASS VARCHAR(150),
     @NOMBRES VARCHAR(150),
     @APELLIDOS VARCHAR(150),
     @DPI VARCHAR(50),
-    @TELEFONO VARCHAR(50),
-    @PASSWORD VARCHAR(150),
+    @TELEFONO VARCHAR(50),    
     @FOTO_PERFIL VARBINARY(MAX),
     @ID_ESTADO INT,
     @ROL_ID INT
@@ -123,11 +123,11 @@ BEGIN
     SET
         ID_APTO = @ID_APTO,
         EMAIL = @EMAIL,
+        PASS = @PASS,
         NOMBRES = @NOMBRES,
         APELLIDOS = @APELLIDOS,
         DPI = @DPI,
-        TELEFONO = @TELEFONO,
-        PASSWORD = @PASSWORD,
+        TELEFONO = @TELEFONO,        
         FOTO_PERFIL = @FOTO_PERFIL,
         ID_ESTADO = @ID_ESTADO,
         ROL_ID = @ROL_ID
@@ -138,7 +138,7 @@ GO
 -- ACCESO DE USUARIO
 CREATE PROCEDURE SP_L_USUARIO_02
     @EMAIL VARCHAR(150),
-    @PASSWORD VARCHAR(150)
+    @PASS VARCHAR(150)
 AS
 BEGIN
     SELECT
@@ -149,7 +149,7 @@ BEGIN
     FROM TRZ6_USUARIO
     WHERE
         EMAIL = @EMAIL
-        AND PASSWORD = @PASSWORD
+        AND PASS = @PASS
         AND ID_ESTADO = 1  -- (opcional: solo usuarios activos)
 END
 GO
@@ -157,12 +157,12 @@ GO
 -- CAMBIO DE CONTRASE�A
 CREATE PROCEDURE SP_U_USUARIO_02
     @ID_USER INT,
-    @PASSWORD VARCHAR(150)
+    @PASS VARCHAR(150)
 AS
 BEGIN
     UPDATE TRZ6_USUARIO
     SET
-        PASSWORD = @PASSWORD
+        PASS = @PASS
     WHERE
         ID_USER = @ID_USER
 END

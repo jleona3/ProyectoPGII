@@ -34,28 +34,28 @@ class Usuario extends Conectar {
     public function insertUsuario(
         $id_apto,
         $email,
+        $pass,
         $nombres,
         $apellidos,
         $dpi,
-        $telefono,
-        $password,
+        $telefono,        
         $foto_perfil,
         $id_estado,
         $rol_id
     ) {
         $conectar = parent::Conexion();
-        $sql = "EXEC SP_I_USUARIO_01 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+        $sql = "EXEC SP_I_USUARIO_01 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
         $query = $conectar->prepare($sql);
         $query->bindValue(1,  $id_apto);
         $query->bindValue(2,  $email);
-        $query->bindValue(3,  $nombres);
-        $query->bindValue(4,  $apellidos);
-        $query->bindValue(5,  $dpi);
-        $query->bindValue(6,  $telefono);
-        $query->bindValue(7,  $password);
-        $query->bindValue(9,  $foto_perfil,   PDO::PARAM_LOB);
-        $query->bindValue(10, $id_estado);
-        $query->bindValue(11, $rol_id);
+        $query->bindValue(3,  $pass);
+        $query->bindValue(4,  $nombres);
+        $query->bindValue(5,  $apellidos);
+        $query->bindValue(6,  $dpi);
+        $query->bindValue(7,  $telefono);        
+        $query->bindValue(8,  $foto_perfil,   PDO::PARAM_LOB);
+        $query->bindValue(9, $id_estado);
+        $query->bindValue(10, $rol_id);
         $query->execute();
     }
 
@@ -64,65 +64,63 @@ class Usuario extends Conectar {
         $id_user,
         $id_apto,
         $email,
+        $pass,
         $nombres,
         $apellidos,
         $dpi,
-        $telefono,
-        $password,
+        $telefono,        
         $foto_perfil,
         $id_estado,
         $rol_id
     ) {
         $conectar = parent::Conexion();
-        $sql = "EXEC SP_U_USUARIO_01 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+        $sql = "EXEC SP_U_USUARIO_01 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
         $query = $conectar->prepare($sql);
         $query->bindValue(1,  $id_user);
         $query->bindValue(2,  $id_apto);
         $query->bindValue(3,  $email);
-        $query->bindValue(4,  $nombres);
-        $query->bindValue(5,  $apellidos);
-        $query->bindValue(6,  $dpi);
-        $query->bindValue(7,  $telefono);
-        $query->bindValue(8,  $password);
-        $query->bindValue(10, $foto_perfil,   PDO::PARAM_LOB);
-        $query->bindValue(11, $id_estado);
-        $query->bindValue(12, $rol_id);
+        $query->bindValue(4,  $pass);
+        $query->bindValue(5,  $nombres);
+        $query->bindValue(6,  $apellidos);
+        $query->bindValue(7,  $dpi);
+        $query->bindValue(8,  $telefono);        
+        $query->bindValue(9,  $foto_perfil,   PDO::PARAM_LOB);
+        $query->bindValue(10, $id_estado);
+        $query->bindValue(11, $rol_id);
         $query->execute();
     }
 
     /* TODO: 6. Acceso al Sistema */
-    public function login(){
+    public function login() {
         $conectar = parent::Conexion();
 
-        if(isset($_POST["enviar"])){
+        if (isset($_POST["enviar"])) {
             $correo = $_POST["email"];
-            $password = $_POST["password"];
+            $pass = $_POST["pass"];
 
-            if(empty($correo) || empty($password)){
+            if (empty($correo) || empty($pass)) {
                 exit();
             } else {
                 $sql = "EXEC SP_L_USUARIO_03 ?, ?";
                 $query = $conectar->prepare($sql);
                 $query->bindValue(1, $correo);
-                $query->bindValue(2, $password);
+                $query->bindValue(2, $pass);
                 $query->execute();
 
                 $resultado = $query->fetch();
-                if(is_array($resultado) && count($resultado) > 0){
+                if (is_array($resultado) && count($resultado) > 0) {
                     $_SESSION["ID_USER"] = $resultado["ID_USER"];
+                    $_SESSION["NOMBRES"] = $resultado["NOMBRES"];
+                    $_SESSION["APELLIDOS"] = $resultado["APELLIDOS"];
                     $_SESSION["EMAIL"] = $resultado["EMAIL"];
-                    header("Location:" . Conectar::ruta() . "view/home");
+
+                    // ✅ Redirección a la vista home
+                    header("Location:" . Conectar::ruta() . "view/home/");
+                    exit();
                 } else {
-                    echo "<script>
-                        alert('Correo o contraseña incorrectos');
-                        document.addEventListener('DOMContentLoaded', function () {
-                            document.getElementById('login_form').reset();
-                        });
-                    </script>";
+                    echo "<script>alert('Correo o contraseña incorrectos');</script>";
                 }
             }
-        } else {
-            exit();
         }
     }
 }

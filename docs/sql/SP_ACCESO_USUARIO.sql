@@ -1,18 +1,18 @@
 -- ✅ Versión final con estado fijo en 1
 CREATE PROCEDURE SP_L_USUARIO_03
     @EMAIL VARCHAR(150),
-    @PASSWORD VARBINARY(150)
+    @PASS VARBINARY(150)
 AS
 BEGIN
     SELECT
         U.ID_USER,
         U.ID_APTO,
         U.EMAIL,
+        U.PASS,
         U.NOMBRES,
         U.APELLIDOS,
         U.DPI,
-        U.TELEFONO,
-        U.PASSWORD,
+        U.TELEFONO,        
         U.FOTO_PERFIL,
         U.ID_ESTADO,
         U.ROL_ID,
@@ -30,6 +30,6 @@ BEGIN
     WHERE
         U.ID_ESTADO = 1
         AND U.EMAIL = @EMAIL
-        AND U.PASSWORD = @PASSWORD
+        AND U.PASS = @PASS
 END
 GO

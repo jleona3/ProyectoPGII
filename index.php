@@ -1,5 +1,4 @@
 <?php
-session_start();
     require_once("config/conexion.php");
 
     if(isset($_POST["enviar"]) and $_POST["enviar"]=="si"){
@@ -16,10 +15,12 @@ session_start();
     <meta charset="utf-8" />
     <title>Iniciar Sesión | Trasciende - La Parroquia</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
-    <link rel="shortcut icon" href="assets/images/favicon.ico">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="assets/images/logo-trz6.ico">
+    <meta content="Condominio La Parroquia" name="description" />
+    <meta content="Trasciende" name="author" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+    <!-- Remix Icon CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="assets/js/layout.js"></script>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
@@ -63,10 +64,10 @@ session_start();
                                 <p class="text-muted">Acceder a Trasciende</p>
                             </div>
                             <div class="p-2 mt-4">
-                                <form action="" method="post" id="login_form">
+                                <form action="" method="post" id="login_form" autocomplete="on">
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Correo Electrónico</label>
-                                        <input type="text" class="form-control" name="email" id="email" placeholder="Ingrese Correo Electrónico">
+                                        <input type="text" class="form-control" name="email" id="email" placeholder="Ingrese Correo Electrónico" required autocomplete="email">
                                     </div>
 
                                     <div class="mb-3">
@@ -75,8 +76,10 @@ session_start();
                                         </div>
                                         <label class="form-label" for="password">Contraseña</label>
                                         <div class="position-relative auth-pass-inputgroup mb-3">
-                                            <input type="password" class="form-control pe-5 password-input" name="password" id="password" placeholder="Ingrese Contraseña">
-                                            <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon material-shadow-none" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                                            <input type="password" class="form-control pe-5 password-input" name="pass" id="pass" placeholder="Ingrese Contraseña" required autocomplete="current-password">
+                                            <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon material-shadow-none" type="button" id="password-addon">
+                                                <i class="ri-eye-fill align-middle"></i>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -121,10 +124,23 @@ session_start();
 <script src="assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
 <script src="assets/libs/particles.js/particles.js"></script>
 <script src="assets/js/pages/particles.app.js"></script>
+<!-- Elimina esta línea -->
 <!-- <script src="assets/js/pages/password-addon.init.js"></script> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 <script src="index.js"></script>
+
+<script>
+    document.getElementById("password-addon").addEventListener("click", function () {
+        const passwordInput = document.getElementById("pass");
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+
+        // Alternar el ícono si quieres (opcional)
+        this.querySelector("i").classList.toggle("ri-eye-fill");
+        this.querySelector("i").classList.toggle("ri-eye-off-fill");
+    });
+</script>
 
 <!-- Script para limpiar campos y evitar reenvío -->
 <script>
@@ -135,7 +151,7 @@ session_start();
                 // Esperamos brevemente antes de limpiar por si hay redirección
                 setTimeout(() => {
                     document.getElementById("email").value = "";
-                    document.getElementById("password").value = "";
+                    document.getElementById("pass").value = "";
                 }, 100);
             });
         }
