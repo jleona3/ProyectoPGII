@@ -74,7 +74,7 @@
         </div>
     </div>
 
-    <?php require_once("modalMantto.php"); ?>
+    <?php require_once("modalEstados.php"); ?>
 
     <?php require_once("../html/js.php"); ?>
     <script type="text/javascript" src="mntEstados.js"></script>

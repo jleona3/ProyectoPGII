@@ -52,15 +52,24 @@ $(document).ready(function () {
         buttons: [
             {
                 extend: 'copyHtml5',
-                text: 'Copiar'
+                text: 'Copiar',
+                exportOptions: {
+                    columns: [0,1,2,3,4,5]  // Solo las columnas 1-6
+                }
             },
             {
                 extend: 'excelHtml5',
-                text: 'Excel'
+                text: 'Excel',
+                exportOptions: {
+                    columns: [0,1,2,3,4,5]  // Solo las columnas 1-6
+                }
             },
             {
                 extend: 'csvHtml5',
-                text: 'CSV'
+                text: 'CSV',
+                exportOptions: {
+                    columns: [0,1,2,3,4,5]  // Solo las columnas 1-6
+                }
             },
             {
                 extend: 'pdfHtml5',
@@ -82,8 +91,16 @@ $(document).ready(function () {
                         alignment: 'center',
                         margin: [0, 0, 0, 10]
                     });
+
+                    // Obtener fecha en formato dd-mm-aaaa
+                    var fechaHoy = new Date();
+                    var dia = ("0" + fechaHoy.getDate()).slice(-2);
+                    var mes = ("0" + (fechaHoy.getMonth() + 1)).slice(-2);
+                    var anio = fechaHoy.getFullYear();
+                    var fechaFormateada = dia + "-" + mes + "-" + anio;
+
                     doc.content.splice(1, 0, {
-                        text: 'Reporte de Estados - Generado el: ' + new Date().toLocaleDateString(),
+                        text: 'Reporte de Estados - Generado el: ' + fechaFormateada,
                         fontSize: 11,
                         alignment: 'center',
                         margin: [0, 0, 0, 20]

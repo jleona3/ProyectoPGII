@@ -1,85 +1,120 @@
 <?php
-    /* TODO: Llamando Clases */
-    require_once("../config/conexion.php");
-    require_once("../models/CategoriaServicio.php");
+/* ===========================================
+   CARGAR DEPENDENCIAS
+=========================================== */
+require_once("../config/conexion.php");
+require_once("../models/CategoriaServicio.php");
 
-    /* TODO: Inicializando Clase */
-    $categoriaServicio = new CategoriaServicio();
+/* ===========================================
+   INICIALIZAR CLASE
+=========================================== */
+$categoriaServicio = new CategoriaServicio();
 
-    switch ($_GET["op"]) {
-        /* TODO: Guardar y Editar, Guardar cuando el ID esté vacío y Actualizar cuando se envíe el ID */
-        case "guardaryeditar":
-            try {
-                if (empty($_POST["id_servicio"])) {
-                    // Guardar
-                    $categoriaServicio->insertCategoriaServicio($_POST["codigo"], $_POST["descripcion"]);
-                } else {
-                    // Editar
-                    $categoriaServicio->updateCategoriaServicio($_POST["id_servicio"], $_POST["codigo"], $_POST["descripcion"]);
+switch ($_GET["op"]) {
+
+    /* ===========================================
+       GUARDAR O EDITAR REGISTRO
+    =========================================== */
+    case "guardaryeditar":
+        try {
+            if (empty($_POST["id_servicio"])) {
+                // Nuevo
+                if ($categoriaServicio->existeServicio($_POST["servicio"])) {
+                    echo json_encode(["status" => "error", "message" => "El nombre del servicio ya existe."]);
+                    exit();
                 }
-                echo json_encode(["status" => "success"]);
-            } catch (Exception $e) {
-                echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+                $categoriaServicio->insertCategoriaServicio($_POST["creado_por"], $_POST["servicio"], $_POST["descripcion"]);
+            } else {
+                // Editar
+                if ($categoriaServicio->existeServicio($_POST["servicio"], $_POST["id_servicio"])) {
+                    echo json_encode(["status" => "error", "message" => "El nombre del servicio ya existe."]);
+                    exit();
+                }
+                $categoriaServicio->updateCategoriaServicio(
+                    $_POST["id_servicio"],
+                    $_POST["creado_por"],
+                    $_POST["servicio"],
+                    $_POST["descripcion"]
+                );
             }
-            break;
+            echo json_encode(["status" => "success"]);
+        } catch (Exception $e) {
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        }
+        break;
 
-        /* TODO: Listar registros por código, formato JSON para DataTable JS */
-        case "listar":
-            try {
-                $codigo = $_POST["codigo"];
-                $datos = $categoriaServicio->getCategoriaServicioCod($codigo);
-                $data = [];
-                foreach ($datos as $row) {
-                    $sub_array = [];
-                    $sub_array[] = $row["codigo"];
-                    $sub_array[] = $row["descripcion"];
-                    // Agregar botones de "Editar" y "Eliminar" para cada registro
-                    $sub_array[] = "<button class='btn btn-warning btn-sm' onclick='editar(" . $row["id_servicio"] . ")'>Editar</button>";
-                    $sub_array[] = "<button class='btn btn-danger btn-sm' onclick='eliminar(" . $row["id_servicio"] . ")'>Eliminar</button>";
-                    $data[] = $sub_array;
-                }
-                $results = [
-                    "sEcho" => 1,
-                    "iTotalRecords" => count($data),
-                    "iTotalDisplayRecords" => count($data),
-                    "aaData" => $data
+    /* ===========================================
+       LISTAR REGISTROS PARA DATATABLE
+    =========================================== */
+    case "listar":
+        $datos = $categoriaServicio->getCategoriaServicioTodos();
+        $data = Array();
+        foreach ($datos as $row) {
+            $sub_array = array();
+            $sub_array[] = $row["ID_SERVICIO"];
+            $sub_array[] = $row["SERVICIO"];
+            $sub_array[] = $row["DESCRIPCION"];
+            $sub_array[] = $row["FE_CREACION"];
+            $sub_array[] = $row["CREADO_POR"];
+            $sub_array[] = $row["MODIFICADO_POR"];
+            $sub_array[] = $row["FE_MODIFICACION"];
+            // Botones
+            $sub_array[] = '<button type="button" onClick="editar('.$row["ID_SERVICIO"].')" id="'.$row["ID_SERVICIO"].'" class="btn btn-warning btn-icon"><i class="ri-edit-2-line"></i></button>';
+            $sub_array[] = '<button type="button" onClick="eliminar('.$row["ID_SERVICIO"].')" id="'.$row["ID_SERVICIO"].'" class="btn btn-danger btn-icon"><i class="ri-delete-bin-5-line"></i></button>';
+            $data[] = $sub_array;
+        }
+        $results = [
+            "sEcho" => 1,
+            "iTotalRecords" => count($data),
+            "iTotalDisplayRecords" => count($data),
+            "aaData" => $data
+        ];
+        echo json_encode($results);
+        break;
+
+    /* ===========================================
+       OBTENER REGISTRO POR ID
+    =========================================== */
+    case "mostrarID":
+        try {
+            $datos = $categoriaServicio->getCategoriaServicioId($_POST["id_servicio"]);
+            if (is_array($datos) && count($datos) > 0) {
+                $output = [
+                    "ID_SERVICIO" => $datos["ID_SERVICIO"],
+                    "SERVICIO" => $datos["SERVICIO"],
+                    "DESCRIPCION" => $datos["DESCRIPCION"],
+                    "CREADO_POR" => $datos["CREADO_POR"],
+                    "FE_CREACION" => $datos["FE_CREACION"],
+                    "MODIFICADO_POR" => $datos["MODIFICADO_POR"],
+                    "FE_MODIFICACION" => $datos["FE_MODIFICACION"]
                 ];
-                echo json_encode($results);
-            } catch (Exception $e) {
-                echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+                echo json_encode($output);
+            } else {
+                echo json_encode(["status" => "error", "message" => "No se encontró el servicio"]);
             }
-            break;
+        } catch (Exception $e) {
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        }
+        break;
 
-        /* TODO: Mostrar información de registro según su ID */
-        case "mostrar":
-            try {
-                $datos = $categoriaServicio->getCategoriaServicioId($_POST["id_servicio"]);
-                if (is_array($datos) && count($datos) > 0) {
-                    $output = [];
-                    foreach ($datos as $row) {
-                        $output = [
-                            "id_servicio" => $row["id_servicio"],
-                            "codigo" => $row["codigo"],
-                            "descripcion" => $row["descripcion"]
-                        ];
-                    }
-                    echo json_encode($output);
-                } else {
-                    echo json_encode(["status" => "error", "message" => "No se encontró el servicio"]);
-                }
-            } catch (Exception $e) {
-                echo json_encode(["status" => "error", "message" => $e->getMessage()]);
-            }
-            break;
+    /* ===========================================
+       ELIMINAR REGISTRO
+    =========================================== */
+    case "eliminar":
+        try {
+            $categoriaServicio->deleteCategoriaServicio($_POST["id_servicio"]);
+            echo json_encode(["status" => "success"]);
+        } catch (Exception $e) {
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        }
+        break;
 
-        /* TODO: Eliminar registro por ID */
-        case "eliminar":
-            try {
-                $categoriaServicio->deleteCategoriaServicio($_POST["id_servicio"]);
-                echo json_encode(["status" => "success"]);
-            } catch (Exception $e) {
-                echo json_encode(["status" => "error", "message" => $e->getMessage()]);
-            }
-            break;
-    }
+    /* ===========================================
+       LISTAR TODOS (OPCIONAL)
+    =========================================== */
+    case "listar_todos":
+        $datos = $categoriaServicio->getCategoriaServicioTodos();
+        echo json_encode($datos);
+        break;
+}
 ?>
