@@ -94,7 +94,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="../MntPropietarios/" role="button" aria-expanded="false" aria-controls="sidebarForms">
+                    <a class="nav-link menu-link" href="../MntProveedores/" role="button" aria-expanded="false" aria-controls="sidebarForms">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Proveedores</span>
                     </a>
                 </li>

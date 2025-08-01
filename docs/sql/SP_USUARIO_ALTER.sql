@@ -1,0 +1,136 @@
+
+-- 1. Agregar una nueva columna temporal para el hash
+ALTER TABLE TRZ6_USUARIO
+ADD PASS_HASH VARBINARY(64);
+
+ALTER TABLE TRZ6_USUARIO
+ALTER COLUMN PASS VARCHAR(150) NOT NULL;
+
+-- 2. Generar el hash para las contraseñas actuales
+UPDATE TRZ6_USUARIO
+SET PASS_HASH = HASHBYTES('SHA2_256', PASS);
+
+-- 3. Eliminar la columna original de texto
+ALTER TABLE TRZ6_USUARIO
+DROP COLUMN PASS;
+
+-- 4. Renombrar la columna nueva a PASS
+EXEC sp_rename 'TRZ6_USUARIO.PASS_HASH', 'PASS', 'COLUMN';
+
+select * from TRZ6_USUARIO go
+
+DECLARE @EMAIL VARCHAR(150) = 'jorge.leon@hotmail.es' go
+
+SELECT * 
+FROM TRZ6_USUARIO 
+WHERE EMAIL = 'jorge.leon@hotmail.es'
+  AND PASS = '5678';
+
+EXEC SP_L_USUARIO_03 'jorge.leon@hotmail.es', '5678';
+
+-- 1. Insertar usuario (SP_I_USUARIO_01)
+CREATE OR ALTER PROCEDURE SP_I_USUARIO_01
+    @ID_APTO INT,
+    @EMAIL VARCHAR(150),
+    @PASS VARCHAR(150),
+    @NOMBRES VARCHAR(150),
+    @APELLIDOS VARCHAR(150),
+    @DPI VARCHAR(50),
+    @TELEFONO VARCHAR(50),    
+    @FOTO_PERFIL VARBINARY(MAX),
+    @ID_ESTADO INT,
+    @ROL_ID INT
+AS
+BEGIN
+    INSERT INTO TRZ6_USUARIO (
+        ID_APTO, EMAIL, PASS, NOMBRES, APELLIDOS, DPI, TELEFONO, FOTO_PERFIL, ID_ESTADO, FE_CREACION, ROL_ID
+    )
+    VALUES (
+        @ID_APTO, @EMAIL, @PASS, @NOMBRES, @APELLIDOS, @DPI, @TELEFONO, @FOTO_PERFIL, @ID_ESTADO, SYSUTCDATETIME(), @ROL_ID
+    );
+END
+GO
+
+-- 2. Actualizar usuario (SP_U_USUARIO_01)
+CREATE OR ALTER PROCEDURE SP_U_USUARIO_01
+    @ID_USER INT,
+    @ID_APTO INT,
+    @EMAIL VARCHAR(150),
+    @PASS VARCHAR(150),
+    @NOMBRES VARCHAR(150),
+    @APELLIDOS VARCHAR(150),
+    @DPI VARCHAR(50),
+    @TELEFONO VARCHAR(50),    
+    @FOTO_PERFIL VARBINARY(MAX),
+    @ID_ESTADO INT,
+    @ROL_ID INT
+AS
+BEGIN
+    UPDATE TRZ6_USUARIO
+    SET
+        ID_APTO = @ID_APTO,
+        EMAIL = @EMAIL,
+        PASS = @PASS,
+        NOMBRES = @NOMBRES,
+        APELLIDOS = @APELLIDOS,
+        DPI = @DPI,
+        TELEFONO = @TELEFONO,
+        FOTO_PERFIL = @FOTO_PERFIL,
+        ID_ESTADO = @ID_ESTADO,
+        ROL_ID = @ROL_ID
+    WHERE ID_USER = @ID_USER;
+END
+GO
+
+-- 3. Login (SP_L_USUARIO_03)
+ALTER PROCEDURE SP_L_USUARIO_03
+    @EMAIL VARCHAR(150),
+    @PASS VARCHAR(150)
+AS
+BEGIN
+    SELECT
+        U.ID_USER,
+        U.ID_APTO,
+        U.EMAIL,
+        U.PASS,
+        U.NOMBRES,
+        U.APELLIDOS,
+        U.DPI,
+        U.TELEFONO,        
+        U.FOTO_PERFIL,
+        U.ID_ESTADO,
+        U.ROL_ID,
+        C.NUM_TORRE,
+        C.NIVEL, 
+        E.DESCRIPCION,
+        E.CREADO_POR,
+        R.ROL_NOM,
+        R.ESTADO
+    FROM 
+        TRZ6_USUARIO U
+        INNER JOIN TRZ6_CONDOMINIO C ON U.ID_APTO = C.ID_APTO
+        INNER JOIN TRZ6_CAT_ESTADO E ON U.ID_ESTADO = E.ID_ESTADO
+        INNER JOIN TRZ6_ROL R ON U.ROL_ID = R.ROL_ID
+    WHERE
+        U.EMAIL = @EMAIL
+        AND U.PASS = @PASS
+        AND U.ID_ESTADO = 1;
+END
+GO
+
+
+-- 4. Cambio de contraseña directo (SP_U_USUARIO_02)
+CREATE OR ALTER PROCEDURE SP_U_USUARIO_02
+    @ID_USER INT,
+    @PASS VARCHAR(150)
+AS
+BEGIN
+    UPDATE TRZ6_USUARIO
+    SET PASS = @PASS
+    WHERE ID_USER = @ID_USER;
+END
+GO
+
+
+select * from TRZ6_USUARIO go
+EXEC SP_L_USUARIO_03 'jorge.leon@hotmail.es', 5678;

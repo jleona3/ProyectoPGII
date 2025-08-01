@@ -1,5 +1,5 @@
 function init() {
-    // Guardar/Editar al enviar el formulario
+    // TODO: Guardar/Editar al enviar el formulario
     $("#mantto-form").on("submit", function (e) {
         guardaryeditar(e);
     });
@@ -80,7 +80,7 @@ $(document).ready(function () {
                     columns: [0, 1, 2, 3, 4, 5, 6] // Solo columnas visibles
                 },
                 customize: function (doc) {
-                    // ENCABEZADO
+                    // TODO: ENCABEZADO
                     doc.content.splice(0, 0, {
                         text: 'Trasciende La Parroquia',
                         fontSize: 18,
@@ -88,7 +88,7 @@ $(document).ready(function () {
                         alignment: 'center',
                         margin: [0, 0, 0, 10]
                     });
-                    // Obtener fecha en formato dd-mm-aaaa
+                    // TODO: Obtener fecha en formato dd-mm-aaaa
                     var fechaHoy = new Date();
                     var dia = ("0" + fechaHoy.getDate()).slice(-2);
                     var mes = ("0" + (fechaHoy.getMonth() + 1)).slice(-2);
@@ -102,7 +102,7 @@ $(document).ready(function () {
                         margin: [0, 0, 0, 20]
                     });
 
-                    // FORMATO TABLA
+                    // TODO: FORMATO TABLA
                     var table = doc.content[3];
                     table.layout = {
                         hLineWidth: function () { return 0.5; },
@@ -114,7 +114,7 @@ $(document).ready(function () {
                     };
                     table.table.widths = ['3%', '15%', '25%', '15%', '15%', '12%', '15%'];
 
-                    // ALINEACIÓN DE COLUMNAS
+                    // TODO: ALINEACIÓN DE COLUMNAS
                     var body = table.table.body;
                     body[0].forEach(function (cell, index) {
                         if ([0, 3, 6].includes(index)) {
@@ -136,10 +136,10 @@ $(document).ready(function () {
                         });
                     }
 
-                    // Fuente
+                    // TODO: Fuente
                     doc.defaultStyle.fontSize = 10;
 
-                    // PIE DE PÁGINA
+                    // TODO: PIE DE PÁGINA
                     doc.footer = function (currentPage, pageCount) {
                         return {
                             columns: [

@@ -1,3 +1,15 @@
+<?php 
+    // Si el usuario no tiene foto, usar imagen por defecto
+    $fotoPerfil = !empty($_SESSION["FOTO_PERFIL"]) 
+        ? "../../uploads/propietarios/" . $_SESSION["FOTO_PERFIL"] 
+        : "../../assets/images/users/user-dummy-img.jpg";
+
+    // Si no hay rol definido, mostrar "Sin Rol"
+    $rolNombre = !empty($_SESSION["ROL_NOMBRE"]) 
+        ? $_SESSION["ROL_NOMBRE"] 
+        : "Sin Rol";
+?>
+
 <header id="page-topbar">
     <div class="layout-width">
         <div class="navbar-header">
@@ -65,10 +77,10 @@
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
-                            <img class="rounded-circle header-profile-user" src="../../assets/images/users/user-dummy-img.jpg" alt="Header Avatar">
+                            <img class="rounded-circle header-profile-user" src="<?php echo $fotoPerfil; ?>" alt="Header Avatar">
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text"><?php echo $_SESSION["NOMBRES"] ?></span>
-                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Administrador</span>
+                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text"><?php echo $rolNombre; ?></span>
                             </span>
                         </span>
                     </button>

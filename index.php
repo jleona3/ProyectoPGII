@@ -2,8 +2,8 @@
     require_once("config/conexion.php");
 
     if(isset($_POST["enviar"]) and $_POST["enviar"]=="si"){
-        require_once("models/Usuario.php");
-        $usuario = new Usuario();
+        require_once("models/Propietario.php");
+        $usuario = new Propietario();
         $usuario->login();
     }
 ?>

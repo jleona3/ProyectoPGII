@@ -1,5 +1,6 @@
 <?php
     require_once("../../config/conexion.php");
+    if(isset($_SESSION["ID_USER"])){
 ?>
 
 <!doctype html>
@@ -76,3 +77,8 @@
     <script type="text/javascript" src="mntServicios.js"></script>
 </body>
 </html>
+<?php
+    }else{
+        header("Location:".Conectar::ruta()."view/404/");
+    }
+?>

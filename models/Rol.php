@@ -11,6 +11,17 @@ class Rol extends Conectar {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /* ===========================================
+    TODO: OBTENER TODOS LOS ROLES (para selects)
+    =========================================== */
+    public function getRolesTodos() {
+        $conectar = parent::Conexion();
+        $sql = "SELECT ROL_ID, ROL_NOM FROM TRZ6_ROL";
+        $query = $conectar->prepare($sql);
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /* TODO: Obtener rol por ID */
     public function getRolPorId($rol_id) {
         $conectar = parent::Conexion();

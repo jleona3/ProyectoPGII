@@ -16,6 +16,8 @@
 <!-- Themas -->
 
 
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
 <!-- jQuery -->
@@ -56,7 +58,6 @@ pdfMake.fonts = {
 <script src="../../assets/js/pages/sweetalerts.init.js"></script>
 
 <!-- Bootstrap y otros plugins -->
- <!-- JAVASCRIPT -->
 <script src="../../assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/libs/simplebar/simplebar.min.js"></script>
 <script src="../../assets/libs/node-waves/waves.min.js"></script>
@@ -66,4 +67,12 @@ pdfMake.fonts = {
 <script src="../../assets/libs/prismjs/prism.js"></script>
 <script src="https://cdn.lordicon.com/lordicon.js"></script>
 <script src="../../assets/js/pages/modal.init.js"></script>
+
+<!-- Toastify JS (carga segura sin document.write) -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+<!-- DataTables ColVis (Column visibility) -->
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
+
 <script src="../../assets/js/app.js"></script>
