@@ -29,7 +29,7 @@ function guardaryeditar(e) {
             }
 
             $('#table_data').DataTable().ajax.reload(null, false);
-            $('#modal-Mantto').modal('hide');
+            $('#modal-ManttoTipoPago').modal('hide');
 
             Swal.fire({
                 title: "¡Éxito!",
@@ -151,6 +151,9 @@ $(document).ready(function () {
         "bInfo": true,
         "iDisplayLength": 10,
         "order": [[0, "desc"]],
+        "columnDefs": [
+            { "className": "text-center", "targets": [0] } // Ajusta si cambia el índice
+        ],
         "language": {
             "sProcessing": "Procesando...",
             "sLengthMenu": "Mostrar _MENU_ registros",
@@ -181,7 +184,7 @@ function editar(id_tipo_pago) {
         $('#fe_modificacion').val(data.FE_MODIFICACION);
     });
     $('#lbl-titulo').html('Editar Método de Pago');
-    $('#modal-Mantto').modal('show');
+    $('#modal-ManttoTipoPago').modal('show');
 }
 
 function eliminar(id_tipo_pago) {
@@ -214,7 +217,7 @@ $(document).on("click", "#btn-nuevo", function () {
     $('#nombre_tipopago').val('');
     $('#lbl-titulo').html('Nuevo Método de Pago');
     $("#mantto-form")[0].reset();
-    $('#modal-Mantto').modal('show');
+    $('#modal-ManttoTipoPago').modal('show');
 });
 
 init();

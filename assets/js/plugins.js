@@ -34,5 +34,5 @@ document.addEventListener("DOMContentLoaded", function () {
         document.head.appendChild(flatpickrScript);
     }
 
-    console.log("Plugins cargados dinámicamente");
+    //console.log("Plugins cargados dinámicamente");
 });

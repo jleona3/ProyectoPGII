@@ -17,24 +17,29 @@ switch ($_GET["op"]) {
     =========================================== */
     case "guardaryeditar":
         try {
-            if (empty($_POST["id_servicio"])) {
+            if (empty($_POST["id_rol"])) {
                 // Nuevo
-                if ($categoriaServicio->existeServicio($_POST["servicio"])) {
-                    echo json_encode(["status" => "error", "message" => "El nombre del servicio ya existe."]);
+                if ($rol->existeROL_NOM($_POST["rol_nom"])) {
+                    echo json_encode(["status" => "error", "message" => "El nombre del rol ya existe."]);
                     exit();
                 }
-                $categoriaServicio->insertCategoriaServicio($_POST["creado_por"], $_POST["servicio"], $_POST["descripcion"]);
+                $rol->insertRol(
+                    $_POST["creado_por"], 
+                    $_POST["rol_nom"], 
+                    $_POST["id_estado"]
+                );
             } else {
                 // Editar
-                if ($categoriaServicio->existeServicio($_POST["servicio"], $_POST["id_servicio"])) {
-                    echo json_encode(["status" => "error", "message" => "El nombre del servicio ya existe."]);
+                if ($rol->existeROL_NOM($_POST["rol_nom"], $_POST["id_rol"])) {
+                    echo json_encode(["status" => "error", "message" => "El nombre del rol ya existe."]);
                     exit();
                 }
-                $categoriaServicio->updateCategoriaServicio(
-                    $_POST["id_servicio"],
+                $rol->updateRol(
+                    $_POST["id_rol"],
                     $_POST["creado_por"],
-                    $_POST["servicio"],
-                    $_POST["descripcion"]
+                    $_POST["rol_nom"],
+                    $_POST["modificado_por"],
+                    $_POST["id_estado"]
                 );
             }
             echo json_encode(["status" => "success"]);

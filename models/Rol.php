@@ -1,29 +1,18 @@
 <?php
 class Rol extends Conectar {
 
-    /* TODO: Listar roles por estado */
-    public function getRolPorEstado($estado) {
+    /* TODO: Listar registros por código */
+    public function getRolCod($rol_id) {
         $conectar = parent::Conexion();
-        $sql = "EXEC SP_L_ROL_01 ?";
+        $sql = "EXEC SP_L_CAT_ROL_01 ?";
         $query = $conectar->prepare($sql);
-        $query->bindValue(1, $estado);
+        $query->bindValue(1, $rol_id);
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /* ===========================================
-    TODO: OBTENER TODOS LOS ROLES (para selects)
-    =========================================== */
-    public function getRolesTodos() {
-        $conectar = parent::Conexion();
-        $sql = "SELECT ROL_ID, ROL_NOM FROM TRZ6_ROL";
-        $query = $conectar->prepare($sql);
-        $query->execute();
-        return $query->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /* TODO: Obtener rol por ID */
-    public function getRolPorId($rol_id) {
+    /* TODO: Obtener registro por ID */
+    public function getRolId($rol_id) {
         $conectar = parent::Conexion();
         $sql = "EXEC SP_O_ROL_01 ?";
         $query = $conectar->prepare($sql);
@@ -32,7 +21,7 @@ class Rol extends Conectar {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
-    /* TODO: Eliminar rol por ID */
+    /* TODO: Eliminar registro por ID */
     public function deleteRol($rol_id) {
         $conectar = parent::Conexion();
         $sql = "EXEC SP_D_ROL_01 ?";
@@ -41,25 +30,54 @@ class Rol extends Conectar {
         $query->execute();
     }
 
-    /* TODO: Insertar nuevo rol */
-    public function insertRol($rol_nom, $estado) {
+    /* TODO: Insertar nuevo registro */
+    public function insertRol($creado_por, $rol_nom, $modificado_por) {
         $conectar = parent::Conexion();
-        $sql = "EXEC SP_I_ROL_01 ?, ?";
+        $sql = "EXEC SP_I_ROL_01 ?, ?, ?";
         $query = $conectar->prepare($sql);
-        $query->bindValue(1, $rol_nom);
-        $query->bindValue(2, $estado);
+        $query->bindValue(1, $creado_por);
+        $query->bindValue(2, $rol_nom);
+        $query->bindValue(3, $modificado_por);
         $query->execute();
     }
 
-    /* TODO: Actualizar rol existente */
-    public function updateRol($rol_id, $rol_nom, $estado) {
+    /* TODO: Actualizar registro por ID con MODIFICADO_POR automático */
+    public function updateRol($rol_id, $creado_por, $rol_nom, $modificado_por, $id_estado) {
         $conectar = parent::Conexion();
-        $sql = "EXEC SP_U_ROL_01 ?, ?, ?";
+        $sql = "EXEC SP_U_ROL_01 ?, ?, ?, ?";
         $query = $conectar->prepare($sql);
         $query->bindValue(1, $rol_id);
         $query->bindValue(2, $rol_nom);
-        $query->bindValue(3, $estado);
+        $query->bindValue(3, $modificado_por);
+        $query->bindValue(4, $id_estado);
         $query->execute();
+    }
+
+    /* TODO: Listar todos */
+    public function getRolTodos() {
+        $conectar = parent::Conexion();
+        $sql = "EXEC SP_L_ROL_TODOS";
+        $query = $conectar->prepare($sql);
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /* TODO: Validar en el backend (PHP) si el nombre ya existe */
+    public function existeROL_NOM($rol_nom, $rol_id = null) {
+        $conectar = parent::Conexion();
+        if ($rol_id) {
+            $sql = "SELECT COUNT(*) AS total FROM TRZ6_ROL WHERE ROL_NOM = ? AND ROL_ID <> ?";
+            $query = $conectar->prepare($sql);
+            $query->bindValue(1, $rol_nom);
+            $query->bindValue(2, $rol_id);
+        } else {
+            $sql = "SELECT COUNT(*) AS total FROM TRZ6_ROL WHERE ROL_NOM = ?";
+            $query = $conectar->prepare($sql);
+            $query->bindValue(1, $rol_nom);
+        }
+        $query->execute();
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        return $row['total'] > 0;
     }
 }
 ?>

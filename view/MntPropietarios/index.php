@@ -1,7 +1,8 @@
 <?php
 require_once("../../config/conexion.php");
-if (isset($_SESSION["ID_USER"])) {
+    if (isset($_SESSION["ID_USER"])) {
 ?>
+
 <!doctype html>
 <html lang="es" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable" data-theme="default" data-theme-colors="default">
 <head>
@@ -42,9 +43,11 @@ if (isset($_SESSION["ID_USER"])) {
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <button type="button" id="btn-nuevo" class="btn btn-primary rounded-pill">
-                                        <i class="ri-add-line"></i> Nuevo Propietario
-                                    </button>
+                                    <?php if ($_SESSION['ROL_ID'] == 1): ?>
+                                        <button type="button" id="btn-nuevo" class="btn btn-primary rounded-pill">
+                                            <i class="ri-add-line"></i> Nuevo Propietario
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="card-body">
                                     <table id="table_data" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
@@ -66,7 +69,9 @@ if (isset($_SESSION["ID_USER"])) {
                                                 <th>Modificado Por</th>
                                                 <th>Fecha Modificación</th>
                                                 <th>Editar</th>
-                                                <th>Eliminar</th>
+                                                <?php if ($_SESSION['ROL_ID'] == 1): ?>
+                                                    <th>Eliminar</th>
+                                                <?php endif; ?>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -84,9 +89,13 @@ if (isset($_SESSION["ID_USER"])) {
 
     <!-- Modal para Crear/Editar Propietarios -->
     <?php require_once("modalPropietarios.php"); ?>
-
-        <?php require_once("../html/js.php"); ?>
+    <?php require_once("../html/js.php"); ?>
+    
+    <script>
+        const ROL_ID = <?php echo $_SESSION['ROL_ID']; ?>;
+    </script>
     <script type="text/javascript" src="mntPropietarios.js"></script>
+
 </body>
 </html>
 <?php

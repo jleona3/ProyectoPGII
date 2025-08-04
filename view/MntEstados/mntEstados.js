@@ -29,7 +29,7 @@ function guardaryeditar(e){
             }
 
             $('#table_data').DataTable().ajax.reload(null, false);
-            $('#modal-Mantto').modal('hide');
+            $('#modal-ManttoEstado').modal('hide');
 
             Swal.fire({
                 title: "¡Éxito!",
@@ -174,6 +174,9 @@ $(document).ready(function () {
         "bInfo": true,
         "iDisplayLength": 10,
         "order": [[0, "desc"]],
+        "columnDefs": [
+            { "className": "text-center", "targets": [0] } // Ajusta si cambia el índice
+        ],
         "language": {
             "sProcessing": "Procesando...",
             "sLengthMenu": "Mostrar _MENU_ registros",
@@ -212,7 +215,7 @@ function editar(id_estado) {
     $('#lbl-titulo').html('Editar Registro');
 
     // TODO: Mostramos el modal
-    $('#modal-Mantto').modal('show');
+    $('#modal-ManttoEstado').modal('show');
 }
 
 function eliminar(id_estado) {
@@ -250,7 +253,7 @@ $(document).on("click", "#btn-nuevo", function () {
     $('#descripcion').val('');
     $('#lbl-titulo').html('Nuevo Registro');
     $("#mantto-form")[0].reset();
-    $('#modal-Mantto').modal('show');
+    $('#modal-ManttoEstado').modal('show');
 });
 
 init();

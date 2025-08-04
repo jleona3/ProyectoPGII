@@ -182,6 +182,10 @@ $(document).ready(function () {
         "bInfo": true,
         "iDisplayLength": 10,
         "order": [[0, "desc"]],
+        // ======= AQUI CENTRAMOS LAS COLUMNAS DE BOTONES =======
+        "columnDefs": [
+            { "className": "text-center", "targets": [0,1,2,3,4] } // Ajusta si cambia el índice
+        ],
         "language": {
             "sProcessing": "Procesando...",
             "sLengthMenu": "Mostrar _MENU_ registros",

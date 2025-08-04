@@ -1,4 +1,4 @@
-<div id="modal-ManttoEstado" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="modal-ManttoRoles" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,17 +7,25 @@
             </div>
             <form method="post" id="mantto-form">
                 <div class="modal-body">
-                    <!-- Campos ocultos para envío -->
-                    <input type="hidden" name="id_estado" id="id_estado"/>
+                    <!-- Campos ocultos -->
+                    <input type="hidden" name="id_rol" id="id_rol"/>
                     <input type="hidden" name="creado_por" id="creado_por" value="<?php echo $_SESSION["NOMBRES"]; ?>">
                     <input type="hidden" name="modificado_por" id="modificado_por" value="<?php echo $_SESSION["NOMBRES"]; ?>">
 
-                    <!-- Solo mostramos el nombre del estado -->
                     <div class="row gy-2">
                         <div class="col-lg-12">
                             <div>
-                                <label for="descripcion" class="form-label">Nombre Estado</label>
-                                <input type="text" class="form-control" id="descripcion" name="descripcion" autocomplete="off" required/>
+                                <label for="rol_nom" class="form-label">Nombre Rol</label>
+                                <input type="text" class="form-control" id="rol_nom" name="rol_nom" autocomplete="off" required/>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div>
+                                <label for="id_estado" class="form-label">Estado</label>
+                                <select class="form-select" id="id_estado" name="id_estado" required>
+                                    <option value="1">Activo</option>
+                                    <option value="17">Inactivo</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -25,7 +33,7 @@
 
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" name="action" value="add" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>

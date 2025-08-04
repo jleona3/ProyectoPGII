@@ -1,22 +1,42 @@
 // Lógica JS (listar, guardar, editar, eliminar propietarios)
+
 function init() {
-    // Guardar/Editar
     $("#propietario-form").on("submit", function (e) {
         e.preventDefault();
-        if (validarFormulario()) {
-            guardaryeditar();
-        }
+        guardaryeditar();
     });
 
     // Preview dinámico de imagen
     $("#foto_perfil").change(function () {
         const file = this.files[0];
         if (file) {
+            // Validar tamaño (1MB máximo)
+            const maxSize = 1 * 1024 * 1024; // 1MB
+            if (file.size > maxSize) {
+                Swal.fire("Imagen demasiado grande", "El archivo no debe superar 1MB.", "warning");
+                $(this).val(""); // Limpiar el input
+                return;
+            }
+
+            // Validar dimensiones
+            const img = new Image();
+            const objectUrl = URL.createObjectURL(file);
+            img.onload = function () {
+                if (this.width > 1280 || this.height > 1200) {
+                    Swal.fire("Dimensiones inválidas", "La imagen no debe exceder 1280x1200 píxeles.", "warning");
+                    $("#foto_perfil").val(""); // Limpiar el input
+                    $("#preview-foto").hide();
+                }else{
+
             const reader = new FileReader();
             reader.onload = function (e) {
                 $("#preview-foto").attr("src", e.target.result).show();
             };
             reader.readAsDataURL(file);
+        }
+        URL.revokeObjectURL(objectUrl);
+            };
+            img.src = objectUrl;
         }
     });
 
@@ -24,10 +44,11 @@ function init() {
     cargarEstados();
     cargarRoles();
     cargarApartamentos();
+
 }
 
 /* ===========================================
-TODO: VALIDAR FORMULARIO
+VALIDAR FORMULARIO
 =========================================== */
 function validarFormulario() {
     let dpi = $("#dpi").val().trim();
@@ -50,7 +71,7 @@ function validarFormulario() {
 }
 
 /* ===========================================
-TODO: CARGAR ESTADOS
+CARGAR ESTADOS
 =========================================== */
 function cargarEstados(preselectedId = null) {
     return new Promise((resolve, reject) => {
@@ -73,15 +94,15 @@ function cargarEstados(preselectedId = null) {
 }
 
 /* ===========================================
-TODO: CARGAR ROLES
+CARGAR ROLES
 =========================================== */
 function cargarRoles(preselectedId = null) {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: "../../controller/rol.php?op=listar_todos",
+            url: "../../controller/rol.php?op=listar_combo",
             type: "GET",
-            success: function (response) {
-                let data = JSON.parse(response);
+            dataType: "json",
+            success: function (data) {
                 let options = "<option value=''>Seleccione</option>";
                 data.forEach(function (item) {
                     options += `<option value="${item.ROL_ID}">${item.ROL_NOM}</option>`;
@@ -96,7 +117,7 @@ function cargarRoles(preselectedId = null) {
 }
 
 /* ===========================================
-TODO: CARGAR APARTAMENTOS
+CARGAR APARTAMENTOS
 =========================================== */
 function cargarApartamentos(preselectedId = null) {
     return new Promise((resolve, reject) => {
@@ -119,7 +140,7 @@ function cargarApartamentos(preselectedId = null) {
 }
 
 /* ===========================================
-TODO: GUARDAR / EDITAR
+GUARDAR / EDITAR
 =========================================== */
 function guardaryeditar() {
     var formData = new FormData($("#propietario-form")[0]);
@@ -131,6 +152,7 @@ function guardaryeditar() {
         data: formData,
         contentType: false,
         processData: false,
+        dataType: "json",  // <--- Asegúrate de que esto esté
         success: function (response) {
             let data;
             try {
@@ -158,36 +180,55 @@ function guardaryeditar() {
 }
 
 /* ===========================================
-TODO: LISTAR EN DATATABLE
+LISTAR EN DATATABLE
 =========================================== */
 $(document).ready(function () {
+    // Si no es administrador, ocultar el botón "Nuevo" y el encabezado "Eliminar"
+    if (ROL_ID != 1) {
+        $("#btn-nuevo").hide(); // Oculta botón "Nuevo"
+        $("#table_data thead th:last-child").hide(); // Oculta el encabezado "Eliminar"
+    }
+
+    // Definir columnas dinámicamente
+    let columns = [
+        { data: "ID_USER" },
+        { data: "FOTO_PERFIL" },
+        { data: "NOMBRE_COMPLETO" },
+        { data: "DPI" },
+        { data: "EMAIL" },
+        { data: "TELEFONO" },
+        { data: "NUM_TORRE" },
+        { data: "NIVEL" },
+        { data: "NUM_APTO" },
+        { data: "ROL_NOMBRE" },
+        { data: "NOMBRE_ESTADO" },
+        { data: "FE_CREACION" },
+        { data: "CREADO_POR" },
+        { data: "MODIFICADO_POR" },
+        { data: "FE_MODIFICACION" },
+        { data: "EDITAR" }
+    ];
+
+    // Si es administrador, agregamos la columna Eliminar
+    if (ROL_ID == 1) { 
+        columns.push({ data: "ELIMINAR" });
+    }
+
     $('#table_data').DataTable({
         "processing": false,
         "serverSide": false,
         dom: 'Bfrtip',
         buttons: [
-            {
-                extend: 'copyHtml5',
-                text: 'Copiar',
-                exportOptions: { columns: [0,2,3,4,5,6,7,8,9,10,11,12,13,14] }
-            },
-            {
-                extend: 'excelHtml5',
-                text: 'Excel',
-                exportOptions: { columns: [0,2,3,4,5,6,7,8,9,10,11,12,13,14] }
-            },
-            {
-                extend: 'csvHtml5',
-                text: 'CSV',
-                exportOptions: { columns: [0,2,3,4,5,6,7,8,9,10,11,12,13,14] }
-            },
-            {
-                extend: 'pdfHtml5',
-                text: 'PDF',
-                orientation: 'landscape',
-                pageSize: 'A4',
+            { extend: 'copyHtml5', text: 'Copiar', exportOptions: { columns: [0,2,3,4,5,6,7,8,9,10,11,12,13,14] } },
+            { extend: 'excelHtml5', text: 'Excel', exportOptions: { columns: [0,2,3,4,5,6,7,8,9,10,11,12,13,14] } },
+            { extend: 'csvHtml5', text: 'CSV',  exportOptions: { columns: [0,2,3,4,5,6,7,8,9,10,11,12,13,14] } },
+            { 
+                extend: 'pdfHtml5', 
+                text: 'PDF', 
+                orientation: 'landscape', 
+                pageSize: 'A4', 
                 title: 'Reporte de Propietarios - Trasciende La Parroquia',
-                exportOptions: { columns: [2,3,4,5,6,7,8,9,10,11] }, // Solo las columnas necesarias
+                exportOptions: { columns: [2,3,4,5,6,7,8,9,10,11] }, /* Solo las columnas necesarias */
                 customize: function (doc) {
                     // ENCABEZADO
                     doc.content.splice(0, 0, {
@@ -229,9 +270,9 @@ $(document).ready(function () {
                         '5%',  // Torre
                         '5%',  // Nivel
                         '5%',  // Apto
-                        '8%', // Rol
+                        '8%',  // Rol
                         '8%',  // Estado
-                        '14%',  // Fecha creación
+                        '14%', // Fecha creación
                     ];
 
                     // ENCABEZADOS
@@ -240,7 +281,6 @@ $(document).ready(function () {
                         cell.fillColor = '#27AE60';
                         cell.color = 'white';
                         cell.bold = true;
-                        // Misma alineación que los datos
                         if ([1,3,4,5,6,9].includes(index)) { 
                             cell.alignment = 'center';
                         } else { 
@@ -251,9 +291,9 @@ $(document).ready(function () {
                     // Celdas: alineaciones personalizadas
                     for (var i = 1; i < body.length; i++) {
                         body[i].forEach(function (cell, index) {
-                            if ([1,3,4,5,6,9].includes(index)) { // DPI, Teléfono, Torre, Nivel, Apto, Fecha -> center
+                            if ([1,3,4,5,6,9].includes(index)) { 
                                 cell.alignment = 'center';
-                            } else { // Nombre, Email, Rol, Estado -> left
+                            } else { 
                                 cell.alignment = 'left';
                             }
                         });
@@ -262,7 +302,7 @@ $(document).ready(function () {
                     // Fuente
                     doc.defaultStyle.fontSize = 9;
 
-                    // PIE
+                    // PIE DE PÁGINA
                     doc.footer = function (currentPage, pageCount) {
                         return {
                             columns: [
@@ -274,56 +314,38 @@ $(document).ready(function () {
                     };
                 }
             },
-
-            {
-                extend: 'colvis',
-                text: 'Columnas',
-                postfixButtons: ['colvisRestore'],
-                collectionLayout: 'fixed two-column'
-            }
-
+            { extend: 'colvis', text: 'Columnas', postfixButtons: ['colvisRestore'] } 
         ],
+        
         "ajax": {
             url: "../../controller/propietario.php?op=listar",
             type: "post",
-            error: function (xhr, error, code) {
-                console.log("Error al cargar DataTable:", xhr.responseText);
+            dataSrc: function (json) {
+                // Si no es administrador, eliminamos el contenido de la columna eliminar
+                if (ROL_ID != 1) {
+                    json.aaData.forEach(function (row) { row.ELIMINAR = ''; });
+                }
+                return json.aaData;
             }
         },
-        "columns": [
-            { data: "ID_USER" },
-            { data: "FOTO_PERFIL" },
-            { data: "NOMBRE_COMPLETO" },
-            { data: "DPI" },
-            { data: "EMAIL" },
-            { data: "TELEFONO" },
-            { data: "NUM_TORRE" },
-            { data: "NIVEL" },
-            { data: "NUM_APTO" },
-            { data: "ROL_NOMBRE" },
-            { data: "NOMBRE_ESTADO" },
-            { data: "FE_CREACION" },
-            { data: "CREADO_POR" },
-            { data: "MODIFICADO_POR" },
-            { data: "FE_MODIFICACION" },
-            { data: "EDITAR" },
-            { data: "ELIMINAR" }
-        ],
+        
+        "columns": columns,
         "bDestroy": true,
         "responsive": true,
-        "bInfo": true,
         "iDisplayLength": 10,
         "order": [[0, "desc"]],
+        "columnDefs": [
+            { "className": "text-center", "targets": [0] } // Ajusta si cambia el índice
+        ],
         "language": {
             "sProcessing": "Procesando...",
             "sLengthMenu": "Mostrar _MENU_ registros",
             "sZeroRecords": "No se encontraron resultados",
             "sEmptyTable": "Ningún dato disponible en esta tabla",
-            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered": "(Filtrando de un total de _MAX_ registros)",
+            "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando 0 a 0 de 0 registros",
+            "sInfoFiltered": "(filtrado de _MAX_ registros)",
             "sSearch": "Buscar:",
-            "sLoadingRecords": "Cargando...",
             "oPaginate": {
                 "sFirst": "Primero",
                 "sLast": "Último",
@@ -334,9 +356,8 @@ $(document).ready(function () {
     });
 });
 
-
 /* ===========================================
-TODO: EDITAR
+EDITAR
 =========================================== */
 function editar(id_user) {
     $.post("../../controller/propietario.php?op=mostrarID", { id_user: id_user }, function (data) {
@@ -366,9 +387,13 @@ function editar(id_user) {
 }
 
 /* ===========================================
-TODO: ELIMINAR
+ELIMINAR
 =========================================== */
 function eliminar(id_user) {
+    if (ROL_ID != 1) {
+        Swal.fire("Acceso denegado", "No tienes permisos para eliminar propietarios.", "warning");
+        return;
+    }
     Swal.fire({
         title: "¿Estás seguro?",
         text: "No podrás revertir esto",
@@ -392,9 +417,16 @@ function eliminar(id_user) {
 }
 
 /* ===========================================
-TODO: NUEVO PROPIETARIO
+NUEVO PROPIETARIO
 =========================================== */
 $(document).on("click", "#btn-nuevo", function () {
+
+    // Bloquear si no es administrador
+    if (ROL_ID != 1) {
+        Swal.fire("Acceso denegado", "No tienes permisos para agregar propietarios.", "warning");
+        return;
+    }
+
     $('#propietario-form')[0].reset();
     $('#id_user').val('');
     $('#preview-foto').attr("src", "../../uploads/propietarios/default.png").show();
@@ -409,3 +441,24 @@ $(document).on("click", "#btn-nuevo", function () {
 });
 
 init();
+
+// Mostrar/Ocultar contraseña (solo si el botón existe)
+document.addEventListener('DOMContentLoaded', function () {
+    const togglePass = document.getElementById('togglePass');
+    if (togglePass) {
+        togglePass.addEventListener('click', function () {
+            const passInput = document.getElementById('pass');
+            const icon = document.getElementById('togglePassIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                icon.classList.remove('ri-eye-line');
+                icon.classList.add('ri-eye-off-line');
+            } else {
+                passInput.type = 'password';
+                icon.classList.remove('ri-eye-off-line');
+                icon.classList.add('ri-eye-line');
+            }
+        });
+    }
+});
+

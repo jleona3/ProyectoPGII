@@ -28,8 +28,13 @@ function guardaryeditar(e){
                 return;
             }
 
-            $('#table_data').DataTable().ajax.reload(null, false);
-            $('#modal-Mantto').modal('hide');
+            $('#table_data').DataTable().ajax.reload(null, false);            
+            // Diferimos la recarga para evitar reflow inmediato al cerrar modal
+            /*setTimeout(() => {
+                $('#table_data').DataTable().ajax.reload(null, false);
+            }, 0);*/
+
+            $('#modal-ManttoServicios').modal('hide');
 
             Swal.fire({
                 title: "¡Éxito!",
@@ -161,6 +166,9 @@ $(document).ready(function () {
         "bInfo": true,
         "iDisplayLength": 10,
         "order": [[0, "desc"]],
+        "columnDefs": [
+            { "className": "text-center", "targets": [0] } // Ajusta si cambia el índice
+        ],
         "language": {
             "sProcessing": "Procesando...",
             "sLengthMenu": "Mostrar _MENU_ registros",
@@ -192,7 +200,7 @@ function editar(id_servicio) {
     });
 
     $('#lbl-titulo').html('Editar Servicio');
-    $('#modal-Mantto').modal('show');
+    $('#modal-ManttoServicios').modal('show');
 }
 
 function eliminar(id_servicio) {
@@ -229,7 +237,7 @@ $(document).on("click", "#btn-nuevo", function () {
     $('#descripcion').val('');
     $('#lbl-titulo').html('Nuevo Servicio');
     $("#mantto-form")[0].reset();
-    $('#modal-Mantto').modal('show');
+    $('#modal-ManttoServicios').modal('show');
 });
 
 init();
