@@ -61,6 +61,7 @@ switch ($_GET["op"]) {
             $sub_array[] = isset($row["CREADO_POR"]) ? $row["CREADO_POR"] : "";
             $sub_array[] = isset($row["MODIFICADO_POR"]) ? $row["MODIFICADO_POR"] : "";
             $sub_array[] = isset($row["FE_MODIFICACION"]) ? $row["FE_MODIFICACION"] : "";
+            $sub_array[] = '<button type="button" onClick="permiso('.$row["ROL_ID"].')" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-settings-2-line"></i></button>';
             $sub_array[] = '<button type="button" onClick="editar('.$row["ROL_ID"].')" class="btn btn-warning btn-icon waves-effect waves-light"><i class="ri-edit-2-line"></i></button>';
             $sub_array[] = ($_SESSION['ROL_ID'] == 1)
                 ? '<button type="button" onClick="eliminar('.$row["ROL_ID"].')" class="btn btn-danger btn-icon waves-effect waves-light"><i class="ri-delete-bin-5-line"></i></button>'

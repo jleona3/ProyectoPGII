@@ -76,3 +76,21 @@ pdfMake.fonts = {
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
 
 <script src="../../assets/js/app.js"></script>
+
+<script>
+  (function() {
+    const collapse = document.getElementById('sidebarCategorias');
+    const header = document.querySelector('.categoria-header');
+
+    if (!collapse || !header) return;
+
+    // Marcar el estado visual del header cuando el submenu abre/cierra
+    collapse.addEventListener('shown.bs.collapse', () => header.classList.add('is-open'));
+    collapse.addEventListener('hidden.bs.collapse', () => header.classList.remove('is-open'));
+
+    // Si al cargar ya está abierto (por persistencia), aplica la clase
+    if (collapse.classList.contains('show')) {
+      header.classList.add('is-open');
+    }
+  })();
+</script>

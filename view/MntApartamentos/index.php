@@ -27,7 +27,7 @@ require_once("../../config/conexion.php");
                                 <h4 class="mb-sm-0">Mantenimiento de Apartamentos</h4>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="#">Mantenimiento</a></li>
+                                        <li class="breadcrumb-item"><a href="#">Mantenimiento de</a></li>
                                         <li class="breadcrumb-item active">Apartamentos</li>
                                     </ol>
                                 </div>
@@ -37,9 +37,11 @@ require_once("../../config/conexion.php");
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <button type="button" id="btn-nuevo" class="btn btn-primary rounded-pill">
-                                        <i class="ri-add-line"></i> Nuevo Apartamento
-                                    </button>
+                                    <?php if ($_SESSION['ROL_ID'] == 1): ?>
+                                        <button type="button" id="btn-nuevo" class="btn btn-primary rounded-pill">
+                                            <i class="ri-add-line"></i> Nuevo Apartamento
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="card-body">
                                     <table id="table_data" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
@@ -55,8 +57,10 @@ require_once("../../config/conexion.php");
                                                 <th>Creado Por</th>
                                                 <th>Modificado Por</th>
                                                 <th>Fecha Modificación</th>
-                                                <th>Editar</th>
-                                                <th>Eliminar</th>
+                                                <?php if ($_SESSION['ROL_ID'] == 1): ?>
+                                                    <th>Editar</th>
+                                                    <th>Eliminar</th>
+                                                <?php endif; ?>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -76,6 +80,9 @@ require_once("../../config/conexion.php");
     <?php require_once("modalApartamentos.php"); ?>
 
     <?php require_once("../html/js.php"); ?>
+    <script>
+        const ROL_ID = <?php echo (int)$_SESSION['ROL_ID']; ?>;
+    </script>
     <script type="text/javascript" src="mntApartamentos.js"></script>
 </body>
 </html>

@@ -178,7 +178,7 @@ $(document).ready(function () {
         // ======= AQUI CENTRAMOS LAS COLUMNAS DE BOTONES =======
         "columnDefs": [
             { "className": "text-center", "targets": [0] },     // Centrar columna 0
-            { "className": "text-left", "targets": [7, 8] }     // Alinear a la izquierda columnas 7 y 8
+            { "className": "text-left", "targets": [7,8,9] }     // Alinear a la izquierda columnas 7 y 8
         ],
         "language": {
             "sProcessing": "Procesando...",
@@ -244,6 +244,203 @@ function eliminar(rol_id) {
             });
         }
     });
+}
+
+function permiso(rol_id) {
+    $('#permisos_data').DataTable({
+        processing: false,
+        serverSide: false,
+        destroy: true,                 // re-inicializa sin errores
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'copyHtml5',
+                text: 'Copiar',
+                exportOptions: {
+                    columns: [0, 1],
+                    format: {
+                        body: function (data, row, col) {
+                            // Col 1 trae botón HTML; lo convertimos a "SI"/"NO"
+                            if (col === 1) {
+                                // quita HTML y espacios
+                                const txt = (typeof data === 'string' ? data.replace(/<[^>]*>/g, '').trim() : data);
+                                // estandariza
+                                return txt.toUpperCase().includes('SI') ? 'SI' : 'NO';
+                            }
+                            return (typeof data === 'string' ? data.replace(/\s+/g, ' ').trim() : data);
+                        }
+                    }
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                text: 'Excel',
+                exportOptions: {
+                    columns: [0, 1],
+                    format: {
+                        body: function (data, row, col) {
+                            if (col === 1) {
+                                const txt = (typeof data === 'string' ? data.replace(/<[^>]*>/g, '').trim() : data);
+                                return txt.toUpperCase().includes('SI') ? 'SI' : 'NO';
+                            }
+                            return (typeof data === 'string' ? data.replace(/\s+/g, ' ').trim() : data);
+                        }
+                    }
+                }
+            },
+            {
+                extend: 'csvHtml5',
+                text: 'CSV',
+                exportOptions: {
+                    columns: [0, 1],
+                    format: {
+                        body: function (data, row, col) {
+                            if (col === 1) {
+                                const txt = (typeof data === 'string' ? data.replace(/<[^>]*>/g, '').trim() : data);
+                                return txt.toUpperCase().includes('SI') ? 'SI' : 'NO';
+                            }
+                            return (typeof data === 'string' ? data.replace(/\s+/g, ' ').trim() : data);
+                        }
+                    }
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                text: 'PDF',
+                orientation: 'portrait',
+                pageSize: 'A4',
+                title: 'Reporte de Permisos - Trasciende La Parroquia',
+                exportOptions: {
+                    columns: [0, 1],
+                    format: {
+                        body: function (data, row, col) {
+                            if (col === 1) {
+                                const txt = (typeof data === 'string' ? data.replace(/<[^>]*>/g, '').trim() : data);
+                                return txt.toUpperCase().includes('SI') ? 'SI' : 'NO';
+                            }
+                            return (typeof data === 'string' ? data.replace(/\s+/g, ' ').trim() : data);
+                        }
+                    }
+                },
+                customize: function (doc) {
+                    // Título
+                    doc.content.splice(0, 0, {
+                        text: 'Trasciende La Parroquia',
+                        fontSize: 18,
+                        bold: true,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 6]
+                    });
+
+                    // Subtítulo con fecha
+                    var f = new Date();
+                    var fecha = String(f.getDate()).padStart(2,'0') + "-" +
+                                String(f.getMonth()+1).padStart(2,'0') + "-" +
+                                f.getFullYear();
+                    doc.content.splice(1, 0, {
+                        text: 'Reporte de Permisos - Generado el: ' + fecha,
+                        fontSize: 11,
+                        alignment: 'center',
+                        margin: [0, 0, 0, 14]
+                    });
+
+                    // Ajustes de tabla (2 columnas)
+                    var table = doc.content[doc.content.length - 1];
+                    if (table && table.table) {
+                        table.layout = {
+                            hLineWidth: function(){ return 0.5; },
+                            vLineWidth: function(){ return 0.5; },
+                            hLineColor: function(){ return '#ccc'; },
+                            vLineColor: function(){ return '#ccc'; },
+                            paddingLeft: function(){ return 4; },
+                            paddingRight: function(){ return 4; }
+                        };
+                        table.table.widths = ['70%', '30%']; // Nombre | Permiso
+
+                        // Encabezados
+                        var body = table.table.body;
+                        if (body && body.length > 0) {
+                            body[0].forEach(function (cell, idx) {
+                                cell.fillColor = '#1A2E4F';
+                                cell.color = 'white';
+                                cell.bold = true;
+                                cell.alignment = (idx === 1) ? 'center' : 'left';
+                            });
+
+                            // Celdas
+                            for (var i = 1; i < body.length; i++) {
+                                body[i][0].alignment = 'left';
+                                body[i][1].alignment = 'center';
+                            }
+                        }
+                    }
+
+                    doc.defaultStyle.fontSize = 10;
+
+                    // Pie de página
+                    doc.footer = function (currentPage, pageCount) {
+                        return {
+                            columns: [
+                                { text: 'Trasciende La Parroquia', alignment: 'left', margin: [40, 0] },
+                                { text: 'Página ' + currentPage + ' de ' + pageCount, alignment: 'right', margin: [0, 0, 40] }
+                            ],
+                            fontSize: 9
+                        };
+                    };
+                }
+            }
+        ],
+        ajax: {
+            url: "../../controller/menu.php?op=listar",
+            type: "post",
+            data: { rol_id: rol_id }
+        },
+        responsive: true,
+        bInfo: true,
+        iDisplayLength: 7,
+        order: [[0, "asc"]],
+        columns: [
+            { data: 0, className: "text-left" },    // Nombre
+            { data: 1, className: "text-center" }   // Permiso (botón)
+        ],
+        language: {
+            sProcessing: "Procesando...",
+            sLengthMenu: "Mostrar _MENU_ registros",
+            sZeroRecords: "No se encontraron resultados",
+            sEmptyTable: "Ningún dato disponible en esta tabla",
+            sInfo: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            sInfoEmpty: "Mostrando 0 a 0 de 0 registros",
+            sInfoFiltered: "(filtrado de _MAX_ registros)",
+            sSearch: "Buscar:",
+            sLoadingRecords: "Cargando...",
+            oPaginate: {
+                sFirst: "Primero",
+                sLast: "Último",
+                sNext: "Siguiente",
+                sPrevious: "Anterior"
+            }
+        }
+    });
+
+    $('#modal-ManttoPermisos').modal('show');
+}
+
+
+function habilitar(id_detmenu){
+    $.post("../../controller/menu.php?op=habilitar", { id_detmenu }, function (resp) {
+        // resp es JSON (status, affected)
+        $('#permisos_data').DataTable().ajax.reload(null, false);
+        // Opcional: feedback
+        // Swal.fire({ icon:'success', title:'Permiso habilitado', timer:1200, showConfirmButton:false });
+    }, "json");
+}
+
+function deshabilitar(id_detmenu){
+    $.post("../../controller/menu.php?op=deshabilitar", { id_detmenu }, function (resp) {
+        $('#permisos_data').DataTable().ajax.reload(null, false);
+        // Swal.fire({ icon:'success', title:'Permiso deshabilitado', timer:1200, showConfirmButton:false });
+    }, "json");
 }
 
 // TODO: Nuevo registro

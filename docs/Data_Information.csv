@@ -1,0 +1,15 @@
+﻿MEN_ID;MEN_NOM;MEN_RUTA;MEN_IDENTI;FEC_CREACION;ID_ESTADO
+;Dashboard;../home/;dashboard;;1
+;Estados;../MntEstados/;estados;;1
+;Servicios;../MntServicios/;servicios;;1
+;Tipo Pago;../MntTipoPago/;tipoPago;;1
+;Apartamentos;../MntApartamentos/;apartamentos;;1
+;Propietarios;../MntPropietarios/;propietarios;;1
+;Proveedores;../MntProveedores/;proveedores;;1
+;Roles;../MntRoles/;roles;;1
+;Pago Mantenimiento;../MntPagoMantto/;pagoMantenimiento;;1
+;Autorización Ingreso;../MntAutoIngreso/;autorizacionIngreso;;1
+;Alquiler Apartamentos;../MntAlquilerApto/;alquilerApartamentos;;1
+;Lectura Principal;../MntLecturaPrincipal/;lecturaPrincipal;;1
+;Lectura Propietario;../MntLecturaPropietario/;lecturaPropietario;;1
+;Incidencias;../MntIncidencias/;incidencias;;1

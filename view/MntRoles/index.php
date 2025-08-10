@@ -22,7 +22,7 @@ if (isset($_SESSION["ID_USER"])) {
                                 <h4 class="mb-sm-0">Mantenimiento de Roles</h4>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="#">Mantenimiento</a></li>
+                                        <li class="breadcrumb-item"><a href="#">Mantenimiento de</a></li>
                                         <li class="breadcrumb-item active">Roles</li>
                                     </ol>
                                 </div>
@@ -50,6 +50,7 @@ if (isset($_SESSION["ID_USER"])) {
                                                 <th>Creado Por</th>
                                                 <th>Modificado Por</th>
                                                 <th>Fecha Modificación</th>
+                                                <th class="text-center" style="width:50px;">Permiso</th>
                                                 <?php if ($_SESSION['ROL_ID'] == 1): ?>
                                                     <th class="text-center" style="width:50px;">Editar</th>
                                                 <?php endif; ?>
@@ -70,6 +71,9 @@ if (isset($_SESSION["ID_USER"])) {
         </div>
     </div>
     <?php require_once("modalRoles.php"); ?>
+
+    <?php require_once("modalPermisos.php"); ?>
+
     <?php require_once("../html/js.php"); ?>
 
     <script>

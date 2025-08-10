@@ -1,3 +1,129 @@
+/* ====== Flyout en modo icon-only (sidebar colapsado) ====== */
 
-/*# sourceMappingURL=custom.min.css.map */
+/* 0) Asegura que el contenedor permita que el flyout “salga” del sidebar */
+html[data-sidebar-size="sm"] .vertical-menu,
+html[data-sidebar-size="sm"] .app-menu {
+  overflow: visible;
+}
 
+/* 1) Oculta la flecha (caret) cuando el sidebar está en icon-only */
+html[data-sidebar-size="sm"] .categoria-header .rotate-caret,
+html[data-sidebar-size="sm-hover"] .categoria-header .rotate-caret {
+  display: none !important;
+}
+
+/* 2) El <li> contenedor debe posicionarse como referencia para el flyout */
+html[data-sidebar-size="sm"] .nav-item,
+html[data-sidebar-size="sm-hover"] .nav-item {
+  position: relative;
+}
+
+/* 3) Estilo del bloque flyout (submenu) */
+html[data-sidebar-size="sm"] .collapse.menu-dropdown,
+html[data-sidebar-size="sm-hover"] .collapse.menu-dropdown {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 8px);
+  min-width: 220px;
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  background: var(--vz-card-bg, #fff);
+  border: 1px solid var(--vz-border-color, rgba(0,0,0,.08));
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  padding: .5rem;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity .15s ease, transform .15s ease, visibility 0s linear .15s;
+}
+
+/* Mostrar flyout al hover del icono/categoría */
+html[data-sidebar-size="sm"] .nav-item:hover > #sidebarCategorias,
+html[data-sidebar-size="sm-hover"] .nav-item:hover > #sidebarCategorias {
+  display: block !important;
+}
+html[data-sidebar-size="sm"] .nav-item:hover > .collapse.menu-dropdown,
+html[data-sidebar-size="sm-hover"] .nav-item:hover > .collapse.menu-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+
+/* Fondo/realce del header al pasar el mouse en icon-only */
+html[data-sidebar-size="sm"] .categoria-header:hover,
+html[data-sidebar-size="sm-hover"] .categoria-header:hover {
+  background: var(--vz-vertical-menu-item-active-bg, rgba(0,0,0,.08));
+  border-radius: .5rem;
+}
+
+/* Estilo de items dentro del flyout */
+html[data-sidebar-size="sm"] .collapse.menu-dropdown ul,
+html[data-sidebar-size="sm-hover"] .collapse.menu-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+html[data-sidebar-size="sm"] .collapse.menu-dropdown .nav-link,
+html[data-sidebar-size="sm-hover"] .collapse.menu-dropdown .nav-link {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  border-radius: .4rem;
+  white-space: nowrap;
+}
+html[data-sidebar-size="sm"] .collapse.menu-dropdown .nav-link:hover,
+html[data-sidebar-size="sm-hover"] .collapse.menu-dropdown .nav-link:hover {
+  background: var(--vz-vertical-menu-item-hover-bg, rgba(0,0,0,.05));
+}
+
+/* Ancho mínimo del icono dentro del flyout */
+html[data-sidebar-size="sm"] .collapse.menu-dropdown .nav-link i,
+html[data-sidebar-size="sm-hover"] .collapse.menu-dropdown .nav-link i {
+  min-width: 1.25rem;
+}
+
+/* ====== Ajustes modo icon-only ====== */
+html[data-sidebar-size="sm"] .categoria-header [data-key="t-apps"],
+html[data-sidebar-size="sm-hover"] .categoria-header [data-key="t-apps"] {
+  display: none !important;
+}
+html[data-sidebar-size="sm"] .categoria-header .d-inline-flex,
+html[data-sidebar-size="sm-hover"] .categoria-header .d-inline-flex {
+  gap: 0 !important;
+}
+html[data-sidebar-size="sm"] .categoria-header,
+html[data-sidebar-size="sm-hover"] .categoria-header {
+  overflow: hidden;
+}
+
+/* ====== Flecha (caret) ====== */
+.categoria-header .rotate-caret,
+.categoria-header .rotate-caret .ri-arrow-down-s-line {
+  color: #fff !important;
+}
+.categoria-header .rotate-caret:hover,
+.categoria-header .rotate-caret:focus,
+.categoria-header .rotate-caret:active {
+  color: #fff !important;
+}
+.categoria-header .rotate-caret .ri-arrow-down-s-line {
+  transition: transform 0.2s ease;
+}
+.categoria-header .rotate-caret[aria-expanded="true"] .ri-arrow-down-s-line {
+  transform: rotate(180deg);
+}
+.categoria-header .rotate-caret:focus {
+  box-shadow: none !important;
+}
+
+/* ====== Texto Categorías ====== */
+.categoria-header [data-key="t-apps"] {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  cursor: default !important;
+}

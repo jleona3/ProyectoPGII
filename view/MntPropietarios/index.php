@@ -32,7 +32,7 @@ require_once("../../config/conexion.php");
                                 <h4 class="mb-sm-0">Mantenimiento de Propietarios</h4>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="#">Mantenimiento</a></li>
+                                        <li class="breadcrumb-item"><a href="#">Mantenimiento de</a></li>
                                         <li class="breadcrumb-item active">Propietarios</li>
                                     </ol>
                                 </div>

@@ -74,6 +74,10 @@ function guardaryeditar(e) {
 }
 
 $(document).ready(function () {
+    // Ocultar botón "Nuevo" si no es admin (defensivo)
+    if (typeof ROL_ID !== "undefined" && ROL_ID != 1) {
+        $("#btn-nuevo").hide();
+    }
     $('#table_data').DataTable({
         "processing": false,
         "serverSide": false,
@@ -227,6 +231,10 @@ function editar(id_apto) {
 
 
 function eliminar(id_apto) {
+    if (typeof ROL_ID !== "undefined" && ROL_ID != 1) {
+        Swal.fire("Acceso denegado", "No tienes permisos para eliminar apartamentos.", "warning");
+        return;
+    }
     Swal.fire({
         title: "¿Estás seguro?",
         text: "¡No podrás revertir esto!",

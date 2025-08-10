@@ -1,5 +1,9 @@
-<!-- Modal para agregar/editar -->
+<?php $esAdmin = ($_SESSION["ROL_ID"] == 1); ?>
+<style>
+.select-readonly { pointer-events: none; background-color:#e9ecef; }
+</style>
 
+<!-- Modal para agregar/editar -->
 <div id="modal-Condominio" class="modal fade" tabindex="-1" aria-labelledby="lbl-titulo" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -16,30 +20,30 @@
                     <div class="row gy-2">
                         <div class="col-lg-6">
                             <label for="num_torre" class="form-label">Torre</label>
-                            <input type="number" class="form-control" id="num_torre" name="num_torre" required min="1"/>
+                            <input type="number" class="form-control" id="num_torre" name="num_torre" required min="1" <?php echo !$esAdmin ? 'readonly' : ''; ?> />
                         </div>
                         <div class="col-lg-6">
                             <label for="nivel" class="form-label">Nivel</label>
-                            <input type="number" class="form-control" id="nivel" name="nivel" required min="1"/>
+                            <input type="number" class="form-control" id="nivel" name="nivel" required min="1" <?php echo !$esAdmin ? 'readonly' : ''; ?> />
                         </div>
                         <div class="col-lg-6">
                             <label for="num_apto" class="form-label">Número Apartamento</label>
-                            <input type="number" class="form-control" id="num_apto" name="num_apto" required min="1"/>
+                            <input type="number" class="form-control" id="num_apto" name="num_apto" required min="1" <?php echo !$esAdmin ? 'readonly' : ''; ?> />
                         </div>
                         <div class="col-lg-6">
                             <label for="metros_m2" class="form-label">Metros²</label>
-                            <input type="number" class="form-control" id="metros_m2" name="metros_m2" required min="1"/>
+                            <input type="number" class="form-control" id="metros_m2" name="metros_m2" required min="1" <?php echo !$esAdmin ? 'readonly' : ''; ?> />
                         </div>
                         <div class="col-lg-12">
                             <label for="id_estado" class="form-label">Estado</label>
-                            <select class="form-select" id="id_estado" name="id_estado" required></select>
+                            <select class="form-select <?php echo !$esAdmin ? 'select-readonly' : ''; ?>" id="id_estado" name="id_estado" required></select>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary" <?php echo !$esAdmin ? 'disabled' : ''; ?>>Guardar</button>
                 </div>
             </form>
         </div>

@@ -5,7 +5,6 @@ require_once("../models/Condominio.php");
 $condominio = new Condominio();
 
 switch ($_GET["op"]) {
-
     /* ===========================================
     TODO: LISTAR APARTAMENTOS (para selects)
     =========================================== */
@@ -23,6 +22,11 @@ switch ($_GET["op"]) {
     =========================================== */
     case "guardaryeditar":
         try {
+            if (!isset($_SESSION["ROL_ID"]) || $_SESSION["ROL_ID"] != 1) {
+                echo json_encode(["status" => "error", "message" => "No tienes permisos para agregar o editar apartamentos."]);
+                return;
+            }
+
             if (empty($_POST["id_apto"])) {
                 $condominio->insertCondominio(
                     $_POST["num_torre"],
@@ -53,28 +57,35 @@ switch ($_GET["op"]) {
     TODO: LISTAR APARTAMENTOS (para DataTable)
     =========================================== */
     case "listar":
+        $esAdmin = (isset($_SESSION["ROL_ID"]) && $_SESSION["ROL_ID"] == 1);
         $datos = $condominio->getCondominioTodos();
-        $data = Array();
+        $data = [];
         foreach ($datos as $row) {
-            $sub_array = array();
-            $sub_array[] = $row["ID_APTO"];
-            $sub_array[] = $row["NUM_TORRE"];
-            $sub_array[] = $row["NIVEL"];
-            $sub_array[] = $row["NUM_APTO"];
-            $sub_array[] = $row["METROS_M2"];
             $color = "secondary";
             switch (strtolower($row["NOMBRE_ESTADO"])) {
                 case "disponible": $color = "success"; break;
                 case "ocupado": $color = "danger"; break;
                 case "mantenimiento": $color = "warning"; break;
             }
-            $sub_array[] = '<span class="badge bg-'.$color.'">'.$row["NOMBRE_ESTADO"].'</span>';
-            $sub_array[] = $row["FE_CREACION"];
-            $sub_array[] = $row["CREADO_POR"];
-            $sub_array[] = $row["MODIFICADO_POR"];
-            $sub_array[] = $row["FE_MODIFICACION"];
-            $sub_array[] = '<button type="button" onClick="editar('.$row["ID_APTO"].')" class="btn btn-warning btn-icon"><i class="ri-edit-2-line"></i></button>';
-            $sub_array[] = '<button type="button" onClick="eliminar('.$row["ID_APTO"].')" class="btn btn-danger btn-icon"><i class="ri-delete-bin-5-line"></i></button>';
+            $sub_array = [
+                $row["ID_APTO"],
+                $row["NUM_TORRE"],
+                $row["NIVEL"],
+                $row["NUM_APTO"],
+                $row["METROS_M2"],
+                '<span class="badge bg-'.$color.'">'.$row["NOMBRE_ESTADO"].'</span>',
+                $row["FE_CREACION"],
+                $row["CREADO_POR"],
+                $row["MODIFICADO_POR"],
+                $row["FE_MODIFICACION"]
+            ];
+
+            // Botones solo para admin
+            if ($esAdmin) {
+                $sub_array[] = '<button type="button" onClick="editar('.$row["ID_APTO"].')" class="btn btn-warning btn-icon"><i class="ri-edit-2-line"></i></button>';
+                $sub_array[] = '<button type="button" onClick="eliminar('.$row["ID_APTO"].')" class="btn btn-danger btn-icon"><i class="ri-delete-bin-5-line"></i></button>';
+            }
+
             $data[] = $sub_array;
         }
         $results = [
@@ -106,6 +117,10 @@ switch ($_GET["op"]) {
     TODO: ELIMINAR APARTAMENTO
     =========================================== */
     case "eliminar":
+        if (!isset($_SESSION["ROL_ID"]) || $_SESSION["ROL_ID"] != 1) {
+            echo json_encode(["status" => "error", "message" => "No tienes permisos para eliminar."]);
+            return;
+        }
         try {
             $condominio->deleteCondominio($_POST["id_apto"]);
             echo json_encode(["status" => "success"]);
